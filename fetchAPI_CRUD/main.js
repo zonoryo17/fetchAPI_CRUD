@@ -1,10 +1,11 @@
 const postIkku = document.querySelector('.postIkku');
 const postBtn = document.querySelector('.postBtn');
 const ikkulist = document.querySelector('.ikkuList');
+const closeBtn = document.querySelector('.closeBtn')
 const url = 'http://localhost:3000/ikku';
 
 
-// Create
+// C：Createの操作
 const createFetch = () => {
     const data = {
         ikku: postIkku.value
@@ -19,7 +20,7 @@ const createFetch = () => {
         if(!response.ok) {
             console.log('Create error!');
             throw new Error('error');
-        } 
+        };
         console.log('Create ok!');
         return response.json();
     }).then((data)  => {
@@ -32,7 +33,7 @@ const createFetch = () => {
 postBtn.addEventListener('click', createFetch, false);
 
 
-// Read
+// R：Readの操作
 const readFetch = () => {
     fetch(url).then((response) => {
         if(!response.ok) {
@@ -54,7 +55,7 @@ const readFetch = () => {
 readFetch();
 
 
-// Update
+// U：Updateの操作
 const updateFetch = (thisLi) => {
     const thisId = thisLi.dataset.id;
     const updateUrl = url + '/' + thisId;
@@ -93,8 +94,17 @@ document.addEventListener('click', (e) => {
     updateFetch(thisLi);
 }, false);
 
+// // キャンセルをクリックしたらupdateAreaを消す
+// document.addEventListener('click', (e) => {
+//     if (e.target.className ==='closeBtn') {
+//         return;
+//     } 
+//     const thisLi = e.target.closest('li');
+//     updateFetch(thisLi);
+// }, false);
 
-// Delete
+
+// D：Deleteの操作
 const deleteFetch = (thisLi) => {
     const thisId = thisLi.dataset.id;
     const updateUrl = url + '/' + thisId;
@@ -123,7 +133,7 @@ document.addEventListener('click', (e) => {
 }, false);
 
 
-// Append Button
+// Buttonを追加
 const appendBtn = (className, text) => {
     const btn = document.createElement('button');
     btn.className = className;
@@ -132,7 +142,7 @@ const appendBtn = (className, text) => {
 };
 
 
-// Append List
+// Listを追加
 const appendList = (thisData) => {
     const li = document.createElement('li');
     li.dataset.id = thisData.id;
@@ -145,7 +155,7 @@ const appendList = (thisData) => {
 };
 
 
-// Append Update Area
+// Update Areaの操作
 const appendUpdateInput =  (thisIkku) => {
     const input = document.createElement('input');
     input.type = 'text';
@@ -165,12 +175,23 @@ const appendUpdateBtn = () => {
     return btn;
 };
 
+const appendCloseBtn = () => {
+    const close = document.createElement('input');
+    close.type = 'button';
+    close.value = 'キャンセル';
+    close.className = 'closeBtn';
+    return close;
+};
+
+
+
 const appendUpdateArea = (thisLi) => {
     const thisIkku = thisLi.firstChild.textContent;
     const appendDiv = document.createElement('div');
     appendDiv.className = 'updateArea';
     appendDiv.appendChild(appendUpdateInput(thisIkku));
     appendDiv.appendChild(appendUpdateBtn());
+    appendDiv.appendChild(appendCloseBtn());
     thisLi.appendChild(appendDiv);
 };
 
@@ -183,3 +204,8 @@ document.addEventListener('click', (e) => {
         appendUpdateArea(thisLi);
     }
 }, false);
+
+closeBtn.addEventListener('click', () => {
+    updateArea.classList.add('.hidde');
+    close.click();
+    });
